@@ -1,6 +1,6 @@
 class Level1 extends Phaser.Scene {
     constructor(){
-        super({key: "Level1"});
+        super({key: "Level1"})
     }
 
 
@@ -11,10 +11,13 @@ class Level1 extends Phaser.Scene {
 
 
     create(){
-        this.sait = this.physics.add.sprite(400, 300, 'sait').setScale(2);
-        this.sait.setCollideWorldBounds(true);
+        this.width = 30000;
+        this.height = 600;
 
-        this.cameras.main.setBounds(0, 0, 3000, 600);
+        this.sait = this.physics.add.sprite(400, 300, 'sait').setScale(2);
+
+        this.cameras.main.setBounds(0, 0, this.width, this.height);
+        this.physics.world.setBounds(0, 0, this.width, this.height);
         this.cameras.main.startFollow(this.sait);
         this.anims.create({
             key: 'run',
@@ -34,12 +37,16 @@ class Level1 extends Phaser.Scene {
 
         this.platforms = this.physics.add.staticGroup();
         this.platforms.create(320, 550, 'platform');
+        this.platforms.create(650, 500, 'platform');
         this.physics.add.collider(this.sait, this.platforms);
 
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.sait.setCollideWorldBounds(true);
     }
 
     update(){
+
         if(this.cursors.left.isDown) {
             this.sait.setVelocityX(-160);
             this.sait.anims.play('run', true);
