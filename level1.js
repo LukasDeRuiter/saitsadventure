@@ -13,6 +13,9 @@ class Level1 extends Phaser.Scene {
     create(){
         this.sait = this.physics.add.sprite(400, 300, 'sait').setScale(2);
         this.sait.setCollideWorldBounds(true);
+
+        this.cameras.main.setBounds(0, 0, 3000, 600);
+        this.cameras.main.startFollow(this.sait);
         this.anims.create({
             key: 'run',
             frames:
@@ -50,6 +53,12 @@ class Level1 extends Phaser.Scene {
         else{
             this.sait.setVelocityX(0);
             this.sait.anims.play('idle', true);
+        }
+
+        if(this.cursors.space.isDown && this.sait.body.touching.down){
+
+            this.sait.setVelocityY(-400);
+
         }
 
     }
