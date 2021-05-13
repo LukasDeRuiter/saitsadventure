@@ -11,6 +11,7 @@ class Level1 extends Phaser.Scene {
         this.load.tilemapTiledJSON('tilemap', 'assets/level1map.json');
 
         this.load.audio('jumpOnEnemySound', ['assets/sound/jumpOnEnemy.mp3']);
+        this.load.audio('walking', ['assets/sound/walking.mp3']);
     }
 
 
@@ -18,9 +19,27 @@ class Level1 extends Phaser.Scene {
         this.width = 3500;
         this.height = 1050;
 
+        this.anims.create({
+            key: 'blobMove',
+            frames:
+            this.anims.generateFrameNumbers('blob', {start: 0, end: 5}),
+            frameRate: 10,
+            repeat: -1  
+        })  
+
         this.sait = this.physics.add.sprite(400, 300, 'sait').setScale(2);
 
-        this.enemyBlob = this.physics.add.sprite(800, 150, 'blob');
+        this.blobs = this.physics.add.group();
+        for(let i = 0; i < 10; i++){
+            this.blobs.create((800 + (i * 100)), 150, 'blob');
+        }
+        this.blobs.getChildren().forEach((blob) => {
+            blob.anims.play('blobMove', true);
+            blob.setVelocityX(-100);
+            blob.body.bounce.x = 1;
+            blob.body.setCollideWorldBounds(true);
+        }, this);
+
 
         this.cameras.main.setBounds(0, 0, this.width, this.height);
         this.physics.world.setBounds(0, 0, this.width, this.height);
@@ -40,32 +59,10 @@ class Level1 extends Phaser.Scene {
         frameRate: 10,
         repeat: -1  
     })          
-        this.anims.create({
-        key: 'blobMove',
-        frames:
-        this.anims.generateFrameNumbers('blob', {start: 0, end: 5}),
-        frameRate: 10,
-        repeat: -1  
-    })  
         this.jumpOnEnemy = this.sound.add('jumpOnEnemySound');
-        this.jumpOnEnemy.play();
+        this.saitWalking = this.sound.add('walking', {loop: true});
 
-        
 
-        this.enemyBlob.anims.play('blobMove', true);
-        this.enemyBlob.setVelocityX(-100);
-        this.enemyBlob.body.bounce.x = 1;
-
-        this.physics.add.collider(this.enemyBlob, this.sait, 
-            function(enemy, sait) {
-            if(enemy.body.touching.up && sait.body.touching.down){
-                this.jumpOnEnemy.play();
-                enemy.destroy();
-            }
-            else{
-                sait.destroy();
-            }
-        })
 
         this.map = this.make.tilemap({ key: 'tilemap'});
         this.tileset = this.map.addTilesetImage('iceworld', 'tiles');
@@ -74,7 +71,7 @@ class Level1 extends Phaser.Scene {
         this.ground.setCollisionByProperty({collides: true});
         //this.physics.world.convertTilemapLayer(this.ground);
         this.physics.add.collider(this.sait, this.ground);
-        this.physics.add.collider(this.enemyBlob, this.ground);
+        this.physics.add.collider(this.blobs, this.ground);
         /* this.platforms = this.physics.add.staticGroup();
         this.platforms.create(320, 550, 'platform');
         this.platforms.create(650, 500, 'platform');
@@ -83,7 +80,14 @@ class Level1 extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.sait.setCollideWorldBounds(true);
-        this.enemyBlob.setCollideWorldBounds(true);
+    }
+
+    walkingSound(){
+        this.saitWalking.play('', 0, 1, true, false);
+    }
+
+    hitEnemy(){
+        this.jumpOnEnemy.play();
     }
 
     update(){
@@ -92,11 +96,15 @@ class Level1 extends Phaser.Scene {
             this.sait.setVelocityX(-160);
             this.sait.anims.play('run', true);
             this.sait.flipX = true;
+            this.walkingSound();
+            
         }
         else if(this.cursors.right.isDown){
             this.sait.setVelocityX(160);
             this.sait.anims.play('run', true);
             this.sait.flipX = false;
+            this.walkingSound();
+            
         }
         else{
             this.sait.setVelocityX(0);
@@ -104,9 +112,8 @@ class Level1 extends Phaser.Scene {
         }
 
         if(this.cursors.space.isDown && this.sait.body.blocked.down){
-
+            this.jumpOnEnemy.play();
             this.sait.setVelocityY(-400);
-        
         }
 
         /*
@@ -117,7 +124,21 @@ class Level1 extends Phaser.Scene {
             this.enemyBlob.setVelocityX(-100);
         }
 
-        */
+       */
 
-    }
+    
+
+        this.physics.add.collider(this.blobs, this.sait, 
+            function(enemy, sait) {
+            if(enemy.body.touching.up && sait.body.touching.down){
+                console.log("broeders");
+                enemy.destroy();
+                sait.setVelocityY(-600); 
+            }
+            else{
+                sait.destroy();
+            }
+        })
+
+    } 
 }
