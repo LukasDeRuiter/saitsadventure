@@ -27,16 +27,17 @@ class Level1 extends Phaser.Scene {
             repeat: -1  
         })  
 
-        this.sait = this.physics.add.sprite(400, 300, 'sait').setScale(2);
+        this.sait = this.physics.add.sprite((this.width * 0.1), (this.height * 0.2), 'sait').setScale(2);
 
         this.blobs = this.physics.add.group();
         for(let i = 0; i < 10; i++){
-            this.blobs.create((800 + (i * 100)), 150, 'blob');
+            this.blobs.create((800 + (i * 100)), 100, 'blob');
         }
         this.blobs.getChildren().forEach((blob) => {
             blob.anims.play('blobMove', true);
             blob.setVelocityX(-100);
             blob.body.bounce.x = 1;
+            blob.setBounce(0.3, 0.3);
             blob.body.setCollideWorldBounds(true);
         }, this);
 
@@ -72,22 +73,38 @@ class Level1 extends Phaser.Scene {
         //this.physics.world.convertTilemapLayer(this.ground);
         this.physics.add.collider(this.sait, this.ground);
         this.physics.add.collider(this.blobs, this.ground);
+
+        this.physics.add.collider(this.blobs, this.sait, 
+            function(enemy, sait) {
+            if(enemy.body.touching.up && sait.body.touching.down){
+                enemy.destroy();
+                collideEnemy();
+                
+            }
+            else{
+                sait.destroy();
+            }
+        })
+
         /* this.platforms = this.physics.add.staticGroup();
         this.platforms.create(320, 550, 'platform');
         this.platforms.create(650, 500, 'platform');
         this.physics.add.collider(this.sait, this.platforms); */
 
         this.cursors = this.input.keyboard.createCursorKeys();
-
         this.sait.setCollideWorldBounds(true);
     }
 
     walkingSound(){
-        this.saitWalking.play('', 0, 1, true, false);
+        //this.saitWalking.play('', 0, 1, true, false);
     }
 
     hitEnemy(){
         this.jumpOnEnemy.play();
+    }
+    
+    collideEnemy(){;
+            this.sait.setVelocityY(-600); 
     }
 
     update(){
@@ -112,8 +129,8 @@ class Level1 extends Phaser.Scene {
         }
 
         if(this.cursors.space.isDown && this.sait.body.blocked.down){
-            this.jumpOnEnemy.play();
-            this.sait.setVelocityY(-400);
+            
+            this.sait.setVelocityY(-600);
         }
 
         /*
@@ -124,8 +141,8 @@ class Level1 extends Phaser.Scene {
             this.enemyBlob.setVelocityX(-100);
         }
 
-       */
-
+       
+        
     
 
         this.physics.add.collider(this.blobs, this.sait, 
@@ -140,5 +157,6 @@ class Level1 extends Phaser.Scene {
             }
         })
 
+        */
     } 
 }
