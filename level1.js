@@ -31,6 +31,9 @@ class Level1 extends Phaser.Scene {
         })  
 
         this.sait = this.physics.add.sprite((this.width * 0.1), (this.height * 0.2), 'sait').setScale(2);
+        this.sait.body.setSize(this.sait.width - 30, this.sait.height).setOffset(15, 0);
+        this.lookingLeft = false;
+        this.lookingRight = false;
     
 
         this.blobs = this.physics.add.group();
@@ -41,7 +44,7 @@ class Level1 extends Phaser.Scene {
             blob.anims.play('blobMove', true);
             blob.setVelocityX(-100);
             blob.body.bounce.x = 1;
-            blob.setBounce(0.3, 0.3);
+            blob.setBounce(1, 1);
             blob.body.setCollideWorldBounds(true);
         }, this);
 
@@ -55,15 +58,25 @@ class Level1 extends Phaser.Scene {
             this.anims.generateFrameNumbers('sait', {start: 1, end: 8}),
             frameRate: 10,
             repeat: -1
-        } 
-    )
+        })
+
         this.anims.create({
         key: 'idle',
         frames:
         this.anims.generateFrameNumbers('sait', {start: 0, end: 0}),
         frameRate: 10,
         repeat: -1  
-    })          
+    }) 
+        
+    this.anims.create({
+        key: 'attack',
+        frames:
+        this.anims.generateFrameNumbers('sait', {start: 9, end: 12}),
+        frameRate: 10,
+        repeat: -1
+    } 
+)
+
         this.jumpOnEnemy = this.sound.add('jumpOnEnemySound');
         this.jumpArray= [];
         this.jumpArray[0] = this.sound.add('jump'),
@@ -92,6 +105,7 @@ class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.sait, this.platforms); */
 
         this.cursors = this.input.keyboard.createCursorKeys();
+
         this.sait.setCollideWorldBounds(true);
     }
 
@@ -100,7 +114,18 @@ class Level1 extends Phaser.Scene {
     }
 
     hitEnemy(){
-        this.jumpOnEnemy.play();
+        this.sait.setVelocityX(0);
+        if(this.lookingRight == true){
+        this.sait.flipX = false;
+        this.sait.body.setSize(this.sait.width, this.sait.height).setOffset(5, 0);
+        this.sait.anims.play('attack', 60, false);
+        }
+        else if(this.lookingLeft == true){
+            this.sait.body.setSize(this.sait.width, this.sait.height).setOffset(-5, 0);
+            this.sait.flipX = true;
+            this.sait.anims.play('attack', 60, false);
+        }
+
     }
     
     collideEnemy(){;
@@ -109,29 +134,44 @@ class Level1 extends Phaser.Scene {
 
     update(){
 
+        if(this.attacking == false){
+        this.sait.body.setSize(this.sait.width - 30, this.sait.height).setOffset(15, 0);
         if(this.cursors.left.isDown) {
             this.sait.setVelocityX(-160);
             this.sait.anims.play('run', true);
             this.sait.flipX = true;
-            this.walkingSound();
+            this.lookingLeft = true;
+            this.lookingRight = false;
             
         }
         else if(this.cursors.right.isDown){
             this.sait.setVelocityX(160);
             this.sait.anims.play('run', true);
             this.sait.flipX = false;
-            this.walkingSound();
+            this.lookingLeft = false;
+            this.lookingRight = true;
             
         }
         else{
             this.sait.setVelocityX(0);
             this.sait.anims.play('idle', true);
-        }
+        }}
 
         if(this.cursors.space.isDown && this.sait.body.blocked.down){
             this.jumpArray[Math.floor(Math.random() * 3)].play();
             this.sait.setVelocityY(-600);
         }
+
+        if(this.cursors.up.isDown){
+            this.attacking = true;
+            this.hitEnemy();
+        }
+
+        if(this.cursors.up.isUp){
+            this.attacking = false;
+        }
+
+
 
         this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
 
@@ -167,6 +207,17 @@ class Level1 extends Phaser.Scene {
             this.sait.setVelocityY(-600);
             blob.destroy();
         }
+        else if(this.attacking == true && blob.body.touching.left && this.lookingRight == true){
+            blob.destroy();
+        }
+        else if(this.attacking == true && blob.body.touching.right && this.lookingLeft == true){
+            blob.destroy();
+        }
+        else{
+            console.log('damn');
+        }
        }
+       console.log(this.lookingRight);
+       console.log(this.lookingLeft);
     } 
 }
