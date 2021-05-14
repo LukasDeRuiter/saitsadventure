@@ -11,6 +11,9 @@ class Level1 extends Phaser.Scene {
         this.load.tilemapTiledJSON('tilemap', 'assets/level1map.json');
 
         this.load.audio('jumpOnEnemySound', ['assets/sound/jumpOnEnemy.mp3']);
+        this.load.audio('jump', ['assets/sound/jumping.mp3']);
+        this.load.audio('jump2', ['assets/sound/jumping2.mp3']);
+        this.load.audio('jump3', ['assets/sound/jumping3.mp3']);
         this.load.audio('walking', ['assets/sound/walking.mp3']);
     }
 
@@ -62,6 +65,12 @@ class Level1 extends Phaser.Scene {
         repeat: -1  
     })          
         this.jumpOnEnemy = this.sound.add('jumpOnEnemySound');
+        this.jumpArray= [];
+        this.jumpArray[0] = this.sound.add('jump'),
+        this.jumpArray[1] = this.sound.add('jump2'),
+        this.jumpArray[2] = this.sound.add('jump3')
+
+        
         this.saitWalking = this.sound.add('walking', {loop: true});
 
 
@@ -120,7 +129,7 @@ class Level1 extends Phaser.Scene {
         }
 
         if(this.cursors.space.isDown && this.sait.body.blocked.down){
-            
+            this.jumpArray[Math.floor(Math.random() * 3)].play();
             this.sait.setVelocityY(-600);
         }
 
@@ -152,11 +161,11 @@ class Level1 extends Phaser.Scene {
         })
 
         */
-       function beuken(sait, blobs){
-        if(blobs.body.touching.up && sait.body.touching.down){
-            console.log("broeders");
+       function beuken(sait, blob){
+        if(blob.body.touching.up && sait.body.touching.down){
             this.jumpOnEnemy.play();
             this.sait.setVelocityY(-600);
+            blob.destroy();
         }
        }
     } 
