@@ -7,6 +7,7 @@ class Level1 extends Phaser.Scene {
     preload(){
         this.load.spritesheet( 'sait', 'assets/saitSpritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet( 'blob', 'assets/blueBlob.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet( 'cbrpaper', 'assets/cbrpaperSpritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('tiles', 'assets/sheet.png');
         this.load.tilemapTiledJSON('tilemap', 'assets/level1map.json');
 
@@ -30,15 +31,34 @@ class Level1 extends Phaser.Scene {
             repeat: -1  
         })  
 
+        this.anims.create({
+            key: 'cbrpaperMove',
+            frames:
+            this.anims.generateFrameNumbers('cbrpaper', {start: 0, end: 5}),
+            frameRate: 10,
+            repeat: -1  
+        })  
+
         this.sait = this.physics.add.sprite((this.width * 0.1), (this.height * 0.2), 'sait').setScale(2);
         this.sait.body.setSize(this.sait.width - 30, this.sait.height).setOffset(15, 0);
         this.lookingLeft = false;
         this.lookingRight = false;
     
 
+        this.cbrpapers = this.physics.add.group();
+        for(let i = 0; i < 5; i++){
+            this.cbrpapers.create((800 + (i * 100)), 100, 'cbrpaper').setScale(Math.floor(Math.random() * 3) + 1);
+        }
+        this.cbrpapers.getChildren().forEach((cbrpaper) => {
+            cbrpaper.anims.play('cbrpaperMove', true);
+            cbrpaper.setVelocityX(-50);
+            cbrpaper.body.bounce.x = 1;
+            cbrpaper.body.setCollideWorldBounds(true);
+        }, this);
+
         this.blobs = this.physics.add.group();
         for(let i = 0; i < 10; i++){
-            this.blobs.create((800 + (i * 100)), 100, 'blob');
+            this.blobs.create((800 + (i * 100)), 300, 'blob').setScale(Math.floor(Math.random() * 3) + 1);
         }
         this.blobs.getChildren().forEach((blob) => {
             blob.anims.play('blobMove', true);
@@ -96,6 +116,7 @@ class Level1 extends Phaser.Scene {
         //this.physics.world.convertTilemapLayer(this.ground);
         this.physics.add.collider(this.sait, this.ground);
         this.physics.add.collider(this.blobs, this.ground);
+        this.physics.add.collider(this.cbrpapers, this.ground);
 
        
 
@@ -174,6 +195,7 @@ class Level1 extends Phaser.Scene {
 
 
         this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
+        this.physics.world.collide(this.sait, this.cbrpapers, beuken, null, this);
 
         /*
         if(this.enemyBlob.body.blocked.left){
@@ -217,7 +239,8 @@ class Level1 extends Phaser.Scene {
             console.log('damn');
         }
        }
-       console.log(this.lookingRight);
-       console.log(this.lookingLeft);
+
+
+
     } 
 }
