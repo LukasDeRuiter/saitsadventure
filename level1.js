@@ -28,6 +28,7 @@ class Level1 extends Phaser.Scene {
         })  
 
         this.sait = this.physics.add.sprite((this.width * 0.1), (this.height * 0.2), 'sait').setScale(2);
+    
 
         this.blobs = this.physics.add.group();
         for(let i = 0; i < 10; i++){
@@ -74,17 +75,7 @@ class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.sait, this.ground);
         this.physics.add.collider(this.blobs, this.ground);
 
-        this.physics.add.collider(this.blobs, this.sait, 
-            function(enemy, sait) {
-            if(enemy.body.touching.up && sait.body.touching.down){
-                enemy.destroy();
-                collideEnemy();
-                
-            }
-            else{
-                sait.destroy();
-            }
-        })
+       
 
         /* this.platforms = this.physics.add.staticGroup();
         this.platforms.create(320, 550, 'platform');
@@ -133,6 +124,8 @@ class Level1 extends Phaser.Scene {
             this.sait.setVelocityY(-600);
         }
 
+        this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
+
         /*
         if(this.enemyBlob.body.blocked.left){
             this.enemyBlob.setVelocityX(100);
@@ -141,6 +134,7 @@ class Level1 extends Phaser.Scene {
             this.enemyBlob.setVelocityX(-100);
         }
 
+        
        
         
     
@@ -158,5 +152,12 @@ class Level1 extends Phaser.Scene {
         })
 
         */
+       function beuken(sait, blobs){
+        if(blobs.body.touching.up && sait.body.touching.down){
+            console.log("broeders");
+            this.jumpOnEnemy.play();
+            this.sait.setVelocityY(-600);
+        }
+       }
     } 
 }
