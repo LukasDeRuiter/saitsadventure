@@ -10,6 +10,7 @@ class Level1 extends Phaser.Scene {
         this.load.spritesheet( 'cbrpaper', 'assets/cbrpaperSpritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('tiles', 'assets/sheet.png');
         this.load.image('coin', 'assets/coin.png');
+        this.load.spritesheet('coinMove', 'assets/coinSpritesheet.png', { frameWidth: 70, frameHeight: 70 });
         this.load.tilemapTiledJSON('tilemap', 'assets/level1map.json');
 
         this.load.audio('jumpOnEnemySound', ['assets/sound/jumpOnEnemy.mp3']);
@@ -36,6 +37,14 @@ class Level1 extends Phaser.Scene {
             key: 'cbrpaperMove',
             frames:
             this.anims.generateFrameNumbers('cbrpaper', {start: 0, end: 5}),
+            frameRate: 10,
+            repeat: -1  
+        })  
+
+        this.anims.create({
+            key: 'coinAnimation',
+            frames:
+            this.anims.generateFrameNumbers('coinMove', {start: 0, end: 5}),
             frameRate: 10,
             repeat: -1  
         })  
@@ -117,7 +126,8 @@ class Level1 extends Phaser.Scene {
         this.coinLayer = this.map.getObjectLayer('coins')['objects'];
         this.coins = this.physics.add.staticGroup();
         this.coinLayer.forEach(object => {
-            this.obj = this.coins.create(object.x, object.y, 'coin');
+            this.obj = this.coins.create(object.x, object.y, 'coins');
+            this.obj.anims.play('coinAnimation', true);
             this.obj.body.width = object.width;
             this.obj.body.height = object.height;
         })
