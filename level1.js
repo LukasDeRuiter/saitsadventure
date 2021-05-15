@@ -9,6 +9,7 @@ class Level1 extends Phaser.Scene {
         this.load.spritesheet( 'blob', 'assets/blueBlob.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet( 'cbrpaper', 'assets/cbrpaperSpritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('tiles', 'assets/sheet.png');
+        this.load.image('coin', 'assets/coin.png');
         this.load.tilemapTiledJSON('tilemap', 'assets/level1map.json');
 
         this.load.audio('jumpOnEnemySound', ['assets/sound/jumpOnEnemy.mp3']);
@@ -113,10 +114,18 @@ class Level1 extends Phaser.Scene {
 
         this.ground = this.map.createLayer('ground', this.tileset);
         this.ground.setCollisionByProperty({collides: true});
+        this.coinLayer = this.map.getObjectLayer('coins')['objects'];
+        this.coins = this.physics.add.staticGroup();
+        this.coinLayer.forEach(object => {
+            this.obj = this.coins.create(object.x, object.y, 'coin');
+            this.obj.body.width = object.width;
+            this.obj.body.height = object.height;
+        })
         //this.physics.world.convertTilemapLayer(this.ground);
         this.physics.add.collider(this.sait, this.ground);
         this.physics.add.collider(this.blobs, this.ground);
         this.physics.add.collider(this.cbrpapers, this.ground);
+        this.physics.add.overlap(this.coins, this.sait);
 
        
 
@@ -196,6 +205,7 @@ class Level1 extends Phaser.Scene {
 
         this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
         this.physics.world.collide(this.sait, this.cbrpapers, beuken, null, this);
+        this.physics.world.overlap(this.coins, this.sait, addCoin, null, this);
 
         /*
         if(this.enemyBlob.body.blocked.left){
@@ -240,6 +250,10 @@ class Level1 extends Phaser.Scene {
         }
        }
 
+       function addCoin(sait, coin){
+           coin.destroy();
+           console.log('oof');
+       }
 
 
     } 

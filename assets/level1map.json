@@ -21,9 +21,71 @@
          "width":50,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"coins",
+         "objects":[
+                {
+                 "height":70,
+                 "id":1,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"coinObj",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":70,
+                 "x":770,
+                 "y":70
+                }, 
+                {
+                 "height":70,
+                 "id":4,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"coinObj",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":70,
+                 "x":910,
+                 "y":70
+                }, 
+                {
+                 "height":70,
+                 "id":7,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"coinObj",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":70,
+                 "x":1050,
+                 "y":70
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":2,
- "nextobjectid":1,
+ "nextlayerid":3,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.6.0",
@@ -923,6 +985,19 @@
                          "value":false
                         }]
                 }],
+         "tilewidth":70
+        }, 
+        {
+         "columns":1,
+         "firstgid":99,
+         "image":"coin.png",
+         "imageheight":70,
+         "imagewidth":70,
+         "margin":0,
+         "name":"coin",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":70,
          "tilewidth":70
         }],
  "tilewidth":70,
