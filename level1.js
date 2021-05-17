@@ -187,7 +187,7 @@ class Level1 extends Phaser.Scene {
         if(this.attacking == false){
         this.sait.body.setSize(this.sait.width - 30, this.sait.height).setOffset(15, 0);
         if(this.cursors.left.isDown) {
-            this.sait.setVelocityX(-660);
+            this.sait.setVelocityX(-160);
             this.sait.anims.play('run', true);
             this.sait.flipX = true;
             this.lookingLeft = true;
@@ -195,7 +195,7 @@ class Level1 extends Phaser.Scene {
             
         }
         else if(this.cursors.right.isDown){
-            this.sait.setVelocityX(660);
+            this.sait.setVelocityX(160);
             this.sait.anims.play('run', true);
             this.sait.flipX = false;
             this.lookingLeft = false;
