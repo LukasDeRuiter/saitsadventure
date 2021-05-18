@@ -10,7 +10,7 @@ const config = {
             debug: true
         }
     },
-    scene: [Level1, Level2],
+    scene: [ Level1, Level2, GameHud],
 
 };
 

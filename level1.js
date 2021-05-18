@@ -10,6 +10,9 @@ class Level1 extends Phaser.Scene {
         this.load.spritesheet( 'cbrpaper', 'assets/cbrpaperSpritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('tiles', 'assets/sheet.png');
         this.load.image('coin', 'assets/coin.png');
+
+
+
         this.load.spritesheet('coinMove', 'assets/coinSpritesheet.png', { frameWidth: 70, frameHeight: 70 });
         this.load.tilemapTiledJSON('tilemap', 'assets/level1map.json');
 
@@ -22,6 +25,8 @@ class Level1 extends Phaser.Scene {
 
 
     create(){
+        //this.scene.run('GameHud');
+
         this.width = 3500;
         this.height = 1050;
 
