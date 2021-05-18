@@ -1,3 +1,4 @@
+
 class Level1 extends Phaser.Scene {
     constructor(){
         super({key: "Level1"})
@@ -56,6 +57,7 @@ class Level1 extends Phaser.Scene {
 
         this.sait = this.physics.add.sprite((this.width * 0.1), (this.height * 0.2), 'sait').setScale(2);
         this.sait.body.setSize(this.sait.width - 30, this.sait.height).setOffset(15, 0);
+        this.saitHealth = 3;
         this.lookingLeft = false;
         this.lookingRight = false;
     
@@ -272,7 +274,9 @@ class Level1 extends Phaser.Scene {
             blob.destroy();
         }
         else{
-            console.log('damn');
+           this.saitHealth -= 1;
+           this.events.emit('damage', this.saitHealth);
+           
         }
        }
 
