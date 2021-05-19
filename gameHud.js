@@ -4,35 +4,41 @@ class GameHud extends Phaser.Scene {
         super({key: "GameHud", active: true})
     }
 
-    preload(){
+    
+    preload = () => {
         this.load.image('emptyHeart', 'assets/hudHeartEmpty.png');
         this.load.image('fullHeart', 'assets/hudHeartFull.png');
 
     }
 
-    create(){
+    create = () => {
 
-        this.hearts = this.add.group();
-        for(let i = 0; i < 3; i++){
-            this.hearts.create((40 + (40 * i)), 40, 'fullHeart');
-
-        }
-        this.heartNum = 1;
-        this.hearts.getChildren().forEach((heart) => {
-
-            heart.name = `heart${this.heartNum}`;
-            this.heartNum += 1;
-            console.log(heart);
-        })
-   
+       
 
             this.ourGame = this.scene.get('Level1');
-            this.ourGame.events.on('damage', changeHealth, this.SaitHealth);
+            
+            this.ourGame.events.on('damage', changeHealth, this.SaitHealth, this.yourHealth);
+            
+            function changeHealth(health, hearts){
+                console.log(health);
+                console.log(hearts);
+        
+                     
+            }
 
-        }} 
+            
+
+        } 
+
+    
+    
+    
+    }
+        
 
         
-            function changeHealth(health){
+ 
+                /*
                 if(health === 3){
                     this.hearts.getChildren().forEach((heart) => {
                         heart.setTexture('fullHeart');
@@ -47,7 +53,7 @@ class GameHud extends Phaser.Scene {
                         }
                     })
                 }}
-                /*
+                /* 
                 else if(health === 1){
                     this.hearts.children[0].setTexture('fullHeart');
                     this.hearts.children[1].setTexture('emptyHeart');
@@ -60,5 +66,3 @@ class GameHud extends Phaser.Scene {
                 }
             }  
 */
-
- 

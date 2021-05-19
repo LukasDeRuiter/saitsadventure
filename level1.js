@@ -22,6 +22,7 @@ class Level1 extends Phaser.Scene {
         this.load.audio('jump2', ['assets/sound/jumping2.mp3']);
         this.load.audio('jump3', ['assets/sound/jumping3.mp3']);
         this.load.audio('walking', ['assets/sound/walking.mp3']);
+        this.load.audio('damaged', ['assets/sound/saitDamage.mp3']);
     }
 
 
@@ -120,7 +121,7 @@ class Level1 extends Phaser.Scene {
         this.jumpArray[1] = this.sound.add('jump2'),
         this.jumpArray[2] = this.sound.add('jump3')
 
-        
+        this.saitTakesDamage = this.sound.add('damaged');
         this.saitWalking = this.sound.add('walking', {loop: true});
 
 
@@ -164,6 +165,24 @@ class Level1 extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.sait.setCollideWorldBounds(true);
+
+        this.hearts = this.add.group();
+        for(let i = 0; i < 3; i++){
+            this.hearts.create((40 + (40 * i)), 40, 'fullHeart');
+
+        }
+
+        this.heartNum = 1;
+        this.hearts.getChildren().forEach((heart) => {
+
+            heart.name = `heart${this.heartNum}`;
+            heart.fixedToCamera = true;
+            this.heartNum += 1;
+        })
+
+        this.yourHealth = this.hearts.getChildren();
+
+        
     }
 
     walkingSound(){
@@ -274,8 +293,11 @@ class Level1 extends Phaser.Scene {
             blob.destroy();
         }
         else{
+           this.sait.setVelocityX(this.sait.body.x * -3);
+           this.sait.setVelocityY(-100);
            this.saitHealth -= 1;
-           this.events.emit('damage', this.saitHealth);
+           this.saitTakesDamage.play();
+           this.events.emit('damage', this.saitHealth, this.yourHealth);
            
         }
        }
