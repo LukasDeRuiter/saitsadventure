@@ -23,6 +23,7 @@ class Level1 extends Phaser.Scene {
         this.load.audio('jump3', ['assets/sound/jumping3.mp3']);
         this.load.audio('walking', ['assets/sound/walking.mp3']);
         this.load.audio('damaged', ['assets/sound/saitDamage.mp3']);
+        this.load.audio('attacking', ['assets/sound/saitAttacks.mp3']);
     }
 
 
@@ -122,6 +123,7 @@ class Level1 extends Phaser.Scene {
         this.jumpArray[2] = this.sound.add('jump3')
 
         this.saitTakesDamage = this.sound.add('damaged');
+        this.saitAttacks = this.sound.add('attacking');
         this.saitWalking = this.sound.add('walking', {loop: true});
 
 
@@ -165,6 +167,9 @@ class Level1 extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.sait.setCollideWorldBounds(true);
+
+        this.attacking = false;
+        this.playingAttack = false;
 
         this.hearts = this.add.group();
         for(let i = 0; i < 3; i++){
@@ -241,13 +246,18 @@ class Level1 extends Phaser.Scene {
         if(this.cursors.up.isDown){
             this.attacking = true;
             this.hitEnemy();
+            if(this.playingAttack !== true){
+                this.saitAttacks.play();
+                this.playingAttack = true;
+            }
         }
 
         if(this.cursors.up.isUp){
             this.attacking = false;
+            this.playingAttack = false;
         }
 
-
+      
 
         this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
         this.physics.world.collide(this.sait, this.cbrpapers, beuken, null, this);
@@ -293,14 +303,16 @@ class Level1 extends Phaser.Scene {
             blob.destroy();
         }
         else{
-           this.sait.setVelocityX(this.sait.body.x * -3);
-           this.sait.setVelocityY(-100);
+           this.sait.setVelocityX(this.sait.body.x * -6);
+           this.sait.setVelocityY(-300);
            this.saitHealth -= 1;
            this.saitTakesDamage.play();
            this.events.emit('damage', this.saitHealth, this.yourHealth);
            
         }
        }
+
+      
 
        function addCoin(sait, coin){
            coin.destroy();
