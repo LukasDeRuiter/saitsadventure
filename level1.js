@@ -173,7 +173,7 @@ class Level1 extends Phaser.Scene {
 
         this.hearts = this.add.group();
         for(let i = 0; i < 3; i++){
-            this.hearts.create((40 + (40 * i)), 40, 'fullHeart');
+            this.hearts.create((40 + (40 * i)), 40, 'fullHeart').setScrollFactor(0);
 
         }
 
@@ -181,11 +181,11 @@ class Level1 extends Phaser.Scene {
         this.hearts.getChildren().forEach((heart) => {
 
             heart.name = `heart${this.heartNum}`;
-            heart.fixedToCamera = true;
             this.heartNum += 1;
         })
 
         this.yourHealth = this.hearts.getChildren();
+    
 
         
     }
@@ -256,8 +256,9 @@ class Level1 extends Phaser.Scene {
             this.attacking = false;
             this.playingAttack = false;
         }
-
-      
+        if(this.saitHealth <= 0){
+            this.scene.restart();
+        }
 
         this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
         this.physics.world.collide(this.sait, this.cbrpapers, beuken, null, this);
@@ -303,7 +304,8 @@ class Level1 extends Phaser.Scene {
             blob.destroy();
         }
         else{
-           this.sait.setVelocityX(this.sait.body.x * -6);
+            console.log(this.sait.x.velocity);
+           this.sait.setVelocityX((this.sait.body.x * 6) * -1);
            this.sait.setVelocityY(-300);
            this.saitHealth -= 1;
            this.saitTakesDamage.play();

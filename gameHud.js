@@ -12,17 +12,36 @@ class GameHud extends Phaser.Scene {
     }
 
     create = () => {
-
-       
-
+        
             this.ourGame = this.scene.get('Level1');
             
-            this.ourGame.events.on('damage', changeHealth, this.SaitHealth, this.yourHealth);
+            this.ourGame.events.on('damage', changeHealth, this.SaitHealth, this.yourHealth, null, this);
             
             function changeHealth(health, hearts){
+                if(health === 3){
+                    hearts[0].setTexture('fullHeart');
+                    hearts[1].setTexture('fullHeart');
+                    hearts[2].setTexture('fullHeart');
+                }
+                else if(health === 2){
+                    hearts[0].setTexture('fullHeart');
+                    hearts[1].setTexture('fullHeart');
+                    hearts[2].setTexture('emptyHeart');
+                }
+                else if(health === 1){
+                    hearts[0].setTexture('fullHeart');
+                    hearts[1].setTexture('emptyHeart');
+                    hearts[2].setTexture('emptyHeart');
+                }
+                else if(health <= 0){
+                    hearts[0].setTexture('emptyHeart');
+                    hearts[1].setTexture('emptyHeart');
+                    hearts[2].setTexture('emptyHeart');
+                }
+                else{
                 console.log(health);
                 console.log(hearts);
-        
+                }
                      
             }
 
