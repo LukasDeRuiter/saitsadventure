@@ -183,6 +183,9 @@ class Level1 extends Phaser.Scene {
             heart.name = `heart${this.heartNum}`;
             this.heartNum += 1;
         })
+        this.coinAmount = 0;
+        this.coinImage = this.add.image(760, 40, 'coin').setScrollFactor(0);
+        this.coinAmountRep = this.add.text(710, 40, `${this.coinAmount}`).setScrollFactor(0).setScale(2);
 
         this.yourHealth = this.hearts.getChildren();
     
@@ -318,7 +321,8 @@ class Level1 extends Phaser.Scene {
 
        function addCoin(sait, coin){
            coin.destroy();
-           console.log('oof');
+           this.coinAmount += 1;
+           this.coinAmountRep.setText(`${this.coinAmount}`);
        }
 
        function reachNextLevel(sait, endpoint){
