@@ -221,7 +221,7 @@ class Level1 extends Phaser.Scene {
         if(this.attacking == false){
         this.sait.body.setSize(this.sait.width - 30, this.sait.height).setOffset(15, 0);
         if(this.cursors.left.isDown) {
-            this.sait.setVelocityX(-160);
+            this.sait.setVelocityX(-1160);
             this.sait.anims.play('run', true);
             this.sait.flipX = true;
             this.lookingLeft = true;
@@ -229,7 +229,7 @@ class Level1 extends Phaser.Scene {
             
         }
         else if(this.cursors.right.isDown){
-            this.sait.setVelocityX(160);
+            this.sait.setVelocityX(1160);
             this.sait.anims.play('run', true);
             this.sait.flipX = false;
             this.lookingLeft = false;
@@ -262,38 +262,13 @@ class Level1 extends Phaser.Scene {
         if(this.saitHealth <= 0){
             this.scene.restart();
         }
-
+/*
         this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
         this.physics.world.collide(this.sait, this.cbrpapers, beuken, null, this);
         this.physics.world.overlap(this.coins, this.sait, addCoin, null, this);
         this.physics.world.overlap(this.endPoints, this.sait, reachNextLevel, null, this);
 
-        /*
-        if(this.enemyBlob.body.blocked.left){
-            this.enemyBlob.setVelocityX(100);
-        }
-        else if(this.enemyBlob.body.blocked.right){
-            this.enemyBlob.setVelocityX(-100);
-        }
-
-        
-       
-        
-    
-
-        this.physics.add.collider(this.blobs, this.sait, 
-            function(enemy, sait) {
-            if(enemy.body.touching.up && sait.body.touching.down){
-                console.log("broeders");
-                enemy.destroy();
-                sait.setVelocityY(-600); 
-            }
-            else{
-                sait.destroy();
-            }
-        })
-
-        */
+  
        function beuken(sait, blob){
         if(blob.body.touching.up && sait.body.touching.down){
             this.jumpOnEnemy.play();
@@ -317,8 +292,8 @@ class Level1 extends Phaser.Scene {
         }
        }
 
-      
-
+      */
+       this.physics.world.overlap(this.endPoints, this.sait, reachNextLevel, null, this);
        function addCoin(sait, coin){
            coin.destroy();
            this.coinAmount += 1;
@@ -327,6 +302,7 @@ class Level1 extends Phaser.Scene {
 
        function reachNextLevel(sait, endpoint){
         this.scene.start("Level2");
+        this.scene.stop("Level1");
     }
 
     } 

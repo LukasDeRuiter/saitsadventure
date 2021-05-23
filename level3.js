@@ -11,7 +11,7 @@ class Level3 extends Phaser.Scene {
         this.load.image('tiles', 'assets/sheet.png');
         this.load.image('coin', 'assets/coin.png');
         this.load.spritesheet('coinMove', 'assets/coinSpritesheet.png', { frameWidth: 70, frameHeight: 70 });
-        this.load.tilemapTiledJSON('tilemap', 'assets/level3map.json');
+        this.load.tilemapTiledJSON('tilemap3', 'assets/level3map.json');
 
         this.load.audio('jumpOnEnemySound', ['assets/sound/jumpOnEnemy.mp3']);
         this.load.audio('jump', ['assets/sound/jumping.mp3']);
@@ -118,8 +118,8 @@ class Level3 extends Phaser.Scene {
 
 
 
-        this.map = this.make.tilemap({ key: 'tilemap'});
-        this.tileset = this.map.addTilesetImage('iceworld', 'tiles');
+        this.map = this.make.tilemap({ key: 'tilemap3'});
+        this.tileset = this.map.addTilesetImage('sheet', 'tiles');
 
         this.ground = this.map.createLayer('ground', this.tileset);
         this.ground.setCollisionByProperty({collides: true});
