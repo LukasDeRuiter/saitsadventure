@@ -11,7 +11,7 @@ class Level2 extends Phaser.Scene {
         this.load.image('tiles', 'assets/sheet.png');
         this.load.image('coin', 'assets/coin.png');
         this.load.spritesheet('coinMove', 'assets/coinSpritesheet.png', { frameWidth: 70, frameHeight: 70 });
-        this.load.tilemapTiledJSON('tilemap', 'assets/level1map.json');
+        this.load.tilemapTiledJSON('tilemap', 'assets/level2map.json');
 
         this.load.audio('jumpOnEnemySound', ['assets/sound/jumpOnEnemy.mp3']);
         this.load.audio('jump', ['assets/sound/jumping.mp3']);
@@ -132,11 +132,21 @@ class Level2 extends Phaser.Scene {
             this.obj.body.height = object.height;
         })
 
+        this.endPointLayer = this.map.getObjectLayer('endpoint')['objects'];
+        this.endPoints = this.physics.add.staticGroup();
+        this.endPointLayer.forEach(object => {
+            this.obj = this.endPoints.create(object.x, object.y, 'coins');
+            this.obj.anims.play('coinAnimation', true);
+            this.obj.body.width = object.width;
+            this.obj.body.height = object.height;
+        })
+
         //this.physics.world.convertTilemapLayer(this.ground);
         this.physics.add.collider(this.sait, this.ground);
         this.physics.add.collider(this.blobs, this.ground);
         this.physics.add.collider(this.cbrpapers, this.ground);
         this.physics.add.overlap(this.coins, this.sait);
+        this.physics.add.overlap(this.endPoints, this.sait);
      
 
        
@@ -218,6 +228,7 @@ class Level2 extends Phaser.Scene {
         this.physics.world.collide(this.sait, this.blobs, beuken, null, this);
         this.physics.world.collide(this.sait, this.cbrpapers, beuken, null, this);
         this.physics.world.overlap(this.coins, this.sait, addCoin, null, this);
+        this.physics.world.overlap(this.endPoints, this.sait, reachNextLevel, null, this);
    
 
         /*
@@ -268,6 +279,9 @@ class Level2 extends Phaser.Scene {
            console.log('oof');
        }
 
+       function reachNextLevel(sait, endpoint){
+        this.scene.start("Level3");
+    }
 
 
     } 
